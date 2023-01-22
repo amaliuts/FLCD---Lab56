@@ -1,0 +1,86 @@
+%{
+#include "y.tab.h"
+%}
+
+%option noyywrap
+%option caseless
+
+LETTER		[a-z_]
+DIGIT		[0-9]
+EXPON		(E|e)("+"?|"-"){CIFRA_ZEC}{1,2}
+SEPARATOR	[;,:_[]\(\)\{\}\|\|]
+OPERATOR	[+*/<>=^&&!\%]|"-"
+REAL_NUMBER	[+-]?(0|[1-9][0-9]*)(\.[0-9]+)?
+IDENTIFIER	[a-z]+[0-9a-z]*
+STRING		\".*\"
+
+%%
+
+[ \t\n]
+
+int		{return INT;}
+bool		{return bool;}
+char		{return CHAR;}
+string		{return string;}
+list		{return list;}
+const		{return CONST;}
+if		{return IF;}
+else		{return ELSE;}
+while		{return WHILE;}
+do		{return DO;}
+for		{return FOR;}
+all		{return all;}
+read		{return READ;}
+write		{return WRITE;}
+of		{return of;}
+true		{return TRUE;}
+false		{return FALSE;}
+begin_stmt	{return BEGIN_STMT;}
+end_stmt	{return END_STMT;}
+break		{return BREAK;}
+print		{return print;}
+return		{return RETURN;}
+between		{return between;}
+and		{return and;}
+void		{return VOID;}
+
+"!"		{return not;}
+"="		{return assignment;}
+"=="		{return equal;}
+"!="		{return notequal;}
+"<="		{return lessorequal;}
+">="		{return greaterorequal;}
+"<"		{return less;}
+">"		{return greater;}
+"/"		{return DIV;}
+"*"		{return multiplication;}
+"+"		{return addition;}
+"-"		{return subtraction;}
+"_"		{return underscore;}
+"&&"		{return and;}
+"^"		{return pow;}
+"||"		{return or;}
+"'%'"		{return mod;}
+"["		{return leftsquarebracket;}
+"]"		{return rightsquarebracket;}
+"("		{return leftbracket;}
+")"		{return rightbracket;}
+"{"		{return leftcurlybracket;}
+"}"		{return rightcurlybracket;}
+":"		{return column;}
+";"		{return semicolumn;}
+","		{return comma;}
+"."		{return dot;}
+
+{IDENTIFIER}	{return identifier;}
+{REAL_NUMBER}	{
+	yylval.p_val = yytext;
+	return noconst;
+		}
+{STRING}	{return stringconst;}
+
+{SEPARATOR}	{return yytext[0];}
+{OPERATOR}	{return yytext[0];}
+.		{printf("lexical errors");}
+%%
+
